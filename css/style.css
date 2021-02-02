@@ -1,0 +1,36 @@
+.stats {
+    width: 160px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.stats input {
+    width: 50px;
+}
+
+.game-field {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-field .row {
+    height: 16px;
+    display: flex;
+}
+
+.game-field .row .field {
+    height: 16px;
+    width: 16px;
+    background: url('/img/closed-field.png');
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Reference solution for "Create mine flagging feature" user story */
+.game-field .row .field.flagged {
+    background: url('/img/flag.png');
+}
