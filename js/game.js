@@ -4,8 +4,10 @@ const game = {
         this.availableFlagsCount = 0;
         this.timeStart = 0;
         this.updateFlags(this.mineCount);
-
-        // TODO: do the rest of the game setup here (eg. add event listeners)
+        // weirdly enough - this only works on Firefox.
+        // Although MDN says that Chrome has support since v66
+        // I enven started a discussion on https://bugs.chromium.org/p/chromium/issues/detail?id=1146467
+        this.unregisterController = new AbortController();
         this.initLeftClick();
         this.initRightClick();
     },
@@ -90,6 +92,7 @@ const game = {
         // avoid the usage of global game variable from below
         const rightClickHandler = (function(game) {
             return function(e) {
+                if (game.isWon()) game.unregisterController.abort()
                 if (!e.target.classList.contains('field')) return;
                 e.preventDefault();
                 if (!game.timeStart) game.timeStart = Math.floor(Date.now() / 1000);
@@ -121,28 +124,34 @@ const game = {
                 }
                 if (field.classList.contains('mine')) {
                     window.alert('BooM')
-                    history.back()
+                    game.unregisterController.abort()
+                    // history.back()
                 }
                 field.classList.toggle('open')
 
                 if (game.isWon()) {
                     const seconds = game.updateTime()
                     window.alert(`🎉 \n(in ${seconds} sec)`)
+                    game.unregisterController.abort()
                 }
 
-                let surrounding_mines = 0
-                for (let n of game.neighbors(field)) {
-                    if (n.classList.contains('mine')) surrounding_mines += 1
-                }
-                if (surrounding_mines > 0) {
-                    field.innerText = surrounding_mines
-                }
+                game.updateGameField(field)
             }
 
         })(this);
 
         const gameField = document.getElementById("game-field");
-        gameField.addEventListener('click', leftClickHandler)
+        gameField.addEventListener('click', leftClickHandler, {signal: this.unregisterController.signal})
+    },
+
+    updateGameField: function(field) {
+        let surrounding_mines = 0
+        for (let n of game.neighbors(field)) {
+            if (n.classList.contains('mine')) surrounding_mines += 1
+        }
+        if (surrounding_mines > 0) {
+            field.innerText = surrounding_mines
+        }
     },
 
     neighbors: function*(field) {
