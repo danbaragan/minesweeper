@@ -2,6 +2,7 @@ const game = {
     init: function () {
         this.drawBoard();
         this.availableFlagsCount = 0;
+        this.timeStart = 0;
         this.updateFlags(this.mineCount);
 
         // TODO: do the rest of the game setup here (eg. add event listeners)
@@ -76,18 +77,27 @@ const game = {
         }
     },
 
+    updateTime: function() {
+        const now = Math.floor(Date.now() / 1000)
+        const seconds = now - this.timeStart
+        const elem = document.getElementById('elapsed-time-counter')
+        elem.value = seconds
+        return seconds
+    },
+
     // reference solution for "Create mine flagging feature" user story
     initRightClick: function () {
         // avoid the usage of global game variable from below
         const rightClickHandler = (function(game) {
             return function(e) {
+                if (!e.target.classList.contains('field')) return;
                 e.preventDefault();
-                if (e.target.classList.contains('field')) {
-                    // if we already have flag - then we clear it and increase the available flags
-                    const inc = e.target.classList.contains('flagged') ? 1 : -1
-                    if (game.updateFlags(inc)) {
-                        e.target.classList.toggle('flagged');
-                    }
+                if (!game.timeStart) game.timeStart = Math.floor(Date.now() / 1000);
+
+                // if we already have flag - then we clear it and increase the available flags
+                const inc = e.target.classList.contains('flagged') ? 1 : -1
+                if (game.updateFlags(inc)) {
+                    e.target.classList.toggle('flagged');
                 }
             }
         })(this);
@@ -100,10 +110,10 @@ const game = {
     initLeftClick: function () {
         const leftClickHandler = (function(game) {
             return function (e) {
-                if (!e.target.classList.contains('field')) {
-                    return;
-                }
+                if (!e.target.classList.contains('field')) return;
                 e.preventDefault()
+                if (!game.timeStart) game.timeStart = Math.floor(Date.now() / 1000);
+
                 const field = e.target
                 const already = field.classList.contains('open') || field.classList.contains('flagged')
                 if (already) {
@@ -116,7 +126,8 @@ const game = {
                 field.classList.toggle('open')
 
                 if (game.isWon()) {
-                    window.alert('🎉')
+                    const seconds = game.updateTime()
+                    window.alert(`🎉 \n(in ${seconds} sec)`)
                 }
 
                 let surrounding_mines = 0
