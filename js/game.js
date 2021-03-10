@@ -122,17 +122,21 @@ const game = {
                 if (already) {
                     return
                 }
+                field.classList.toggle('open')
+
                 if (field.classList.contains('mine')) {
-                    window.alert('BooM')
+                    const seconds = game.updateTime()
+                    window.alert(`🤯 \n(in ${seconds} sec)`)
                     game.unregisterController.abort()
+                    return
                     // history.back()
                 }
-                field.classList.toggle('open')
 
                 if (game.isWon()) {
                     const seconds = game.updateTime()
                     window.alert(`🎉 \n(in ${seconds} sec)`)
                     game.unregisterController.abort()
+                    return
                 }
 
                 game.updateGameField(field)
@@ -145,13 +149,27 @@ const game = {
     },
 
     updateGameField: function(field) {
-        let surrounding_mines = 0
-        for (let n of game.neighbors(field)) {
-            if (n.classList.contains('mine')) surrounding_mines += 1
+        const game = this
+        const countNeighborMines = function(field) {
+            let surrounding_mines = 0
+            for (let n of game.neighbors(field)) {
+                if (n.classList.contains('mine')) surrounding_mines += 1
+            }
+            field.classList.add('open')  // when we go recursive we need to open too
+            if (surrounding_mines > 0) {
+                field.innerText = surrounding_mines
+            } else {
+                for (let n of game.neighbors(field)) {
+                    if (!n.classList.contains('open') && !n.classList.contains('mine') && !n.classList.contains('flagged')) {
+                        console.log(n)
+                        countNeighborMines(n)
+                    }
+                }
+            }
+            return surrounding_mines
         }
-        if (surrounding_mines > 0) {
-            field.innerText = surrounding_mines
-        }
+
+        countNeighborMines(field)
     },
 
     neighbors: function*(field) {
