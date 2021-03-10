@@ -10,6 +10,8 @@ const game = {
         this.unregisterController = new AbortController();
         this.initLeftClick();
         this.initRightClick();
+
+        this.mines2colorClass = [null, 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight']
     },
 
     drawBoard: function () {
@@ -92,7 +94,10 @@ const game = {
         // avoid the usage of global game variable from below
         const rightClickHandler = (function(game) {
             return function(e) {
-                if (game.isWon()) game.unregisterController.abort()
+                if (game.isWon()) {
+                    game.unregisterController.abort()
+                    return
+                }
                 if (!e.target.classList.contains('field')) return;
                 e.preventDefault();
                 if (!game.timeStart) game.timeStart = Math.floor(Date.now() / 1000);
@@ -119,10 +124,9 @@ const game = {
 
                 const field = e.target
                 const already = field.classList.contains('open') || field.classList.contains('flagged')
-                if (already) {
-                    return
-                }
-                field.classList.toggle('open')
+                if (already) return
+
+                field.classList.add('open')
 
                 if (field.classList.contains('mine')) {
                     const seconds = game.updateTime()
@@ -142,11 +146,11 @@ const game = {
 
                     const mineFields = document.querySelectorAll('div.field.mine')
                     mineFields.forEach((f) => f.classList.add('flagged'))
+                    game.updateFlags(-1)  // shold be only one mine left to flag
 
                     game.unregisterController.abort()
                     return
                 }
-
                 game.updateGameField(field)
             }
 
@@ -166,10 +170,10 @@ const game = {
             field.classList.add('open')  // when we go recursive we need to open too
             if (surrounding_mines > 0) {
                 field.innerText = surrounding_mines
+                field.classList.add(game.mines2colorClass[surrounding_mines])
             } else {
                 for (let n of game.neighbors(field)) {
                     if (!n.classList.contains('open') && !n.classList.contains('mine') && !n.classList.contains('flagged')) {
-                        console.log(n)
                         countNeighborMines(n)
                     }
                 }

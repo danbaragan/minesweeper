@@ -38,8 +38,32 @@
 .game-field .row .field.open {
     background: url('/img/open-field.png');
     text-align: center;
-    color: blue;
 }
 .game-field .row .field.open.mine {
     background: url('/img/mine.png');
+}
+
+.game-field .row .field.open.one {
+    color: green;
+}
+.game-field .row .field.open.two {
+    color: rgb(2, 177, 177);
+}
+.game-field .row .field.open.three {
+    color: rgb(47, 84, 248);
+}
+.game-field .row .field.open.four {
+    color: rgb(143, 82, 255);
+}
+.game-field .row .field.open.five {
+    color: rgb(209, 1, 209);;
+}
+.game-field .row .field.open.six {
+    color: red;
+}
+.game-field .row .field.open.seven {
+    color: maroon;
+}
+.game-field .row .field.open.eight {
+    color: black;
 }
