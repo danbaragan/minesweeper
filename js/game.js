@@ -3,6 +3,7 @@ const game = {
         this.drawBoard();
         this.availableFlagsCount = 0;
         this.timeStart = 0;
+        document.getElementById('elapsed-time-counter').value = 0
         this.updateFlags(this.mineCount);
         // weirdly enough - this only works on Firefox.
         // Although MDN says that Chrome has support since v66
@@ -146,7 +147,7 @@ const game = {
 
                     const mineFields = document.querySelectorAll('div.field.mine')
                     mineFields.forEach((f) => f.classList.add('flagged'))
-                    game.updateFlags(-1)  // shold be only one mine left to flag
+                    game.updateFlags(-1)  // should be only one mine left to flag
 
                     game.unregisterController.abort()
                     return
