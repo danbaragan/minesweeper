@@ -34,3 +34,12 @@
 .game-field .row .field.flagged {
     background: url('/img/flag.png');
 }
+
+.game-field .row .field.open {
+    background: url('/img/open-field.png');
+    text-align: center;
+    color: blue;
+}
+.game-field .row .field.open.mine {
+    background: url('/img/mine.png');
+}
