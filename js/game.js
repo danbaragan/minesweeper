@@ -69,6 +69,13 @@ const game = {
         return false
     },
 
+    isWon: function() {
+        const openedFields = document.querySelectorAll('div.field.open')
+        if (this.rows * this.cols - openedFields.length === this.mineCount) {
+            return true
+        }
+    },
+
     // reference solution for "Create mine flagging feature" user story
     initRightClick: function () {
         // avoid the usage of global game variable from below
@@ -107,6 +114,10 @@ const game = {
                     history.back()
                 }
                 field.classList.toggle('open')
+
+                if (game.isWon()) {
+                    window.alert('🎉')
+                }
 
                 let surrounding_mines = 0
                 for (let n of game.neighbors(field)) {
