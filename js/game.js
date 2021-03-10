@@ -126,7 +126,11 @@ const game = {
 
                 if (field.classList.contains('mine')) {
                     const seconds = game.updateTime()
-                    window.alert(`🤯 \n(in ${seconds} sec)`)
+                    window.alert(`💣  \n(in ${seconds} sec)`)
+
+                    const mineFields = document.querySelectorAll('div.field.mine')
+                    mineFields.forEach((f) => f.classList.add('open'))
+
                     game.unregisterController.abort()
                     return
                     // history.back()
@@ -135,6 +139,10 @@ const game = {
                 if (game.isWon()) {
                     const seconds = game.updateTime()
                     window.alert(`🎉 \n(in ${seconds} sec)`)
+
+                    const mineFields = document.querySelectorAll('div.field.mine')
+                    mineFields.forEach((f) => f.classList.add('flagged'))
+
                     game.unregisterController.abort()
                     return
                 }
