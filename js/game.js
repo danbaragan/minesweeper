@@ -1,6 +1,8 @@
 const game = {
     init: function () {
         this.drawBoard();
+        this.availableFlagsCount = 0;
+        this.updateFlags(this.mineCount);
 
         // TODO: do the rest of the game setup here (eg. add event listeners)
         this.initLeftClick();
@@ -56,22 +58,39 @@ const game = {
                         data-row="${row}" data-col="${col}"></div>`);
     },
 
+    updateFlags: function(incValue) {
+        let newCount = this.availableFlagsCount + incValue
+        if (newCount >= 0 && newCount <= this.mineCount) {
+            this.availableFlagsCount = newCount
+            const elem = document.getElementById('flags-left-counter')
+            elem.value = this.availableFlagsCount
+            return true
+        }
+        return false
+    },
+
     // reference solution for "Create mine flagging feature" user story
     initRightClick: function () {
-        const gameField = document.getElementById("game-field");
-        // let's put this high up on the whole field and let it bubble up from the specific game tile
-        gameField.addEventListener('contextmenu', function (event) {
-            if (event.target.classList.contains('field')) {
-                event.preventDefault();
-                event.target.classList.toggle('flagged');
+        // avoid the usage of global game variable from below
+        const rightClickHandler = (function(game) {
+            return function(e) {
+                e.preventDefault();
+                if (e.target.classList.contains('field')) {
+                    // if we already have flag - then we clear it and increase the available flags
+                    const inc = e.target.classList.contains('flagged') ? 1 : -1
+                    if (game.updateFlags(inc)) {
+                        e.target.classList.toggle('flagged');
+                    }
+                }
             }
-        });
+        })(this);
+
+        // let's put this high up on the whole field and let it bubble up from the specific game tile
+        const gameField = document.getElementById("game-field");
+        gameField.addEventListener('contextmenu', rightClickHandler)
     },
 
     initLeftClick: function () {
-        const gameField = document.getElementById("game-field");
-
-        // avoid the usage of global game variable from below
         const leftClickHandler = (function(game) {
             return function (e) {
                 if (!e.target.classList.contains('field')) {
@@ -100,6 +119,7 @@ const game = {
 
         })(this);
 
+        const gameField = document.getElementById("game-field");
         gameField.addEventListener('click', leftClickHandler)
     },
 
