@@ -141,6 +141,8 @@ const game = {
                     // history.back()
                 }
 
+                game.updateGameField(field)
+
                 if (game.isWon()) {
                     const seconds = game.updateTime()
                     window.alert(`🎉 \n(in ${seconds} sec)`)
@@ -152,7 +154,6 @@ const game = {
                     game.unregisterController.abort()
                     return
                 }
-                game.updateGameField(field)
             }
 
         })(this);
