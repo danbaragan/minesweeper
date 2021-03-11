@@ -62,8 +62,8 @@
     color: red;
 }
 .game-field .row .field.open.seven {
-    color: maroon;
+    color: rgb(165, 0, 0);
 }
 .game-field .row .field.open.eight {
-    color: black;
+    color: rgb(114, 65, 0);
 }
