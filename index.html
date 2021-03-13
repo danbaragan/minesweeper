@@ -6,24 +6,30 @@
     <!-- http://proger.i-forge.net/The_smallest_transparent_pixel/ -->
     <link rel="icon" href="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=">
     <link rel="stylesheet" href="css/style.css">
+    <script src="js/game.js" defer></script>
 </head>
 <body>
+    <div class="center">
+        <form class="flex-elem" method="GET">
+            <span>
+                <label for="size">Size:</label>
+                <input type="number" id="size" name="size" value="10">
+            </span>
+            <span>
+                <label for="mines">Mines:</label>
+                <input type="number" id="mines" name="mines" value="10">
+            </span>
 
-<form action="game.html" method="GET">
-    <div>
-        <label for="cols">Cols:</label><br>
-        <input type="number" id="cols" name="cols" value="10">
-    </div>
-    <div>
-        <label for="rows">Rows:</label><br>
-        <input type="number" id="rows" name="rows" value="10">
-    </div>
-    <div>
-        <label for="mines">Mines:</label><br>
-        <input type="number" id="mines" name="mines" value="10">
+            <input id="start-game" type="submit" value="Start"/>
+        </form>
     </div>
 
-    <input type="submit" value="Start"/>
-</form>
+    <div class="center">
+        <div class="flex-elem"><span>Flags left: </span><span id="flags-left-counter">0</span></div>
+        <div class="flex-elem"><span>Time taken: </span><span id="elapsed-time-counter">0</span></div>
+    </div>
+    <div id="game-field" class="game-field" data-cell-width="16" data-cell-height="16">
+
+    </div>
 </body>
 </html>
